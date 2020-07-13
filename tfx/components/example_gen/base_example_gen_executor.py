@@ -64,10 +64,10 @@ def _GeneratePartitionKey(record: Union[tf.train.Example,
   if feature_name not in features:
     raise RuntimeError('Feature name `{}` does not exist.'.format(feature_name))
   feature = features[feature_name]
-  if not feature.HasField('kind'):
+  if  feature.WhichOneof('kind') is None :
     raise RuntimeError('Partition feature does not contain any value.')
-  if (not feature.HasField('bytes_list') and
-      not feature.HasField('int64_list')):
+  if (not feature.WhichOneof('kind') == 'bytes_list' and
+      not feature.WhichOneof('kind') == 'int64_list'):
     raise RuntimeError('Only `bytes_list` and `int64_list` features are '
                        'supported for partition.')
   return feature.SerializeToString(deterministic=True)
